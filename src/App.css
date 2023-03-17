@@ -1,0 +1,14 @@
+.App {
+  margin:0;
+  padding:0;
+  box-sizing: border-box;
+}
+.person{
+  font-weight: 700;
+}
+.info{
+  border:1px solid rgb(179, 170, 170);
+  padding-left:3%;
+  padding-bottom:1%;
+}
+

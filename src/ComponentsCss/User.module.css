@@ -1,0 +1,30 @@
+.container{
+    width:63%;
+    min-height: 100vh;
+    margin:0 auto;
+    border:1px solid rgb(197, 191, 191)
+}
+.container .userInfo{
+    display:flex;
+    flex-wrap:wrap;
+    gap:2%;
+    width:95%;
+    margin: 2% auto;
+   
+}
+.container img{
+    display: block;
+    width:20rem;
+    height:auto;
+}
+.container .person{
+    font-weight: 700;
+}
+.container .info{
+    border:1px solid rgb(179, 170, 170);
+    padding-left:3%;
+    padding-bottom:1%;
+}
+.container .title{
+    margin-bottom:1%;
+}

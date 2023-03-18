@@ -6,7 +6,7 @@ import User from './User'
 function AppRoutes() {
   return (
     <Routes>
-        <Route path='/' element={<Users></Users>}></Route>
+        <Route path='/' element={<Users/>} />
         <Route path='/user' element={<User></User>}></Route>
     </Routes>
   )

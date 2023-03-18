@@ -6,10 +6,13 @@ import { useNavigate } from "react-router-dom";
 function Users() {
   const [posts, setPosts] = useState([]);
   const [pageNumber, setPageNumber] = useState(1);
-  const [pageSize, setPageSize] = useState(20);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
+  
   const navigate = useNavigate();
+
+  const pageSize = 20;
+
 
   const observer = useRef();
   const lastBox = useCallback(

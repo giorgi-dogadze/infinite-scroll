@@ -4,19 +4,20 @@ import { useSearchParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 function User() {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const postId = searchParams.get("postId");
   const [user, setUser] = useState({});
   const [pageNumber, setPageNumber] = useState(1);
-  const [pageSize, setPageSize] = useState(20);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
-  const [friendsPosts, setFriendPosts] = useState([]);
-  const [visitedPosts, setVisitedPosts] = useState([
-    { prefix: "", name: "", lastName: "" },
-  ]);
+  const [friendsPost, setFriendsPost] = useState([]);
+  const [visitedPosts, setVisitedPosts] = useState([]);
+  
+  const [searchParams] = useSearchParams();
+  const postId = searchParams.get("postId");
+  
   const navigate = useNavigate();
   const observer = useRef();
+  
+  const pageSize = 20;
 
   const lastBox = useCallback(
     (element) => {
@@ -33,6 +34,7 @@ function User() {
   );
 
   useEffect(() => {
+    
     axios
       .get(
         `http://sweeftdigital-intern.eu-central-1.elasticbeanstalk.com/user/${postId}`
@@ -42,12 +44,20 @@ function User() {
         setVisitedPosts([
           ...visitedPosts,
           {
-            prefix: user.prefix,
-            name: user.name,
-            lastName: user.lastName,
-            id: user.id,
+            prefix: response.data.prefix,
+            name: response.data.name,
+            lastName: response.data.lastName,
+            id: response.data.id,
           },
         ]);
+      });
+    axios
+      .get(
+        `http://sweeftdigital-intern.eu-central-1.elasticbeanstalk.com/user/${postId}/friends/1/20`
+      )
+      .then((response) => {
+        setFriendsPost(response.data.list);
+        setHasMore(response.data.list.length > 0);
       });
   }, [postId]);
 
@@ -58,12 +68,13 @@ function User() {
         `http://sweeftdigital-intern.eu-central-1.elasticbeanstalk.com/user/${postId}/friends/${pageNumber}/${pageSize}`
       )
       .then((response) => {
-        setFriendPosts([...friendsPosts, ...response.data.list]);
+        setFriendsPost([...friendsPost, ...response.data.list]);
         setLoading(false);
         setHasMore(response.data.list.length > 0);
       });
   }, [pageNumber]);
 
+  console.log('visitedPosts', visitedPosts)
   return (
     <div className={styles.container}>
       <div className={styles.userInfo}>
@@ -127,46 +138,27 @@ function User() {
       </div>
       <h2>Friends:</h2>
       <div className={styles.friendsList}>
-        {friendsPosts.map((post, index) => {
-          if (friendsPosts.length === index + 1) {
+        {friendsPost.map((friendPost, index) => {
             return (
               <div
                 className={styles.box}
-                onClick={() => navigate(`/user?postId=${post.id}`)}
-                key={post.id}
-                ref={lastBox}
+                onClick={() => navigate(`/user?postId=${friendPost.id}`)}
+                key={friendPost.id}
+                ref={friendsPost.length === index + 1 ? lastBox : undefined}
               >
                 <div className={styles.picture}>
-                  <img src={post.imageUrl} alt=""></img>
+                  <img src={friendPost.imageUrl} alt=""></img>
                 </div>
                 <div className={styles.subInfo}>
                   <div className={styles.person}>
-                    {post.prefix} {post.name} {post.lastName}
+                    {friendPost.prefix} {friendPost.name} {friendPost.lastName}
                   </div>
-                  <div className={styles.title}>{post.title}</div>
-                </div>
-              </div>
-            );
-          } else {
-            return (
-              <div
-                className={styles.box}
-                onClick={() => navigate(`/user?postId=${post.id}`)}
-                key={post.id}
-              >
-                <div className={styles.picture}>
-                  <img src={post.imageUrl} alt=""></img>
-                </div>
-                <div className={styles.subInfo}>
-                  <div className={styles.person}>
-                    {post.prefix} {post.name} {post.lastName}
-                  </div>
-                  <div className={styles.title}>{post.title}</div>
+                  <div className={styles.title}>{friendPost.title}</div>
                 </div>
               </div>
             );
           }
-        })}
+        )}
       </div>
     </div>
   );

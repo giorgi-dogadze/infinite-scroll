@@ -11,7 +11,6 @@ function Users() {
   const [hasMore,setHasMore]=useState(true)
   const navigate=useNavigate()
 
-
   const observer=useRef()
   const lastBox=useCallback((element)=>{
     if(loading) return
@@ -39,7 +38,7 @@ function Users() {
     <div className={styles.container}>
           {posts.map((post,index)=>{
           if(posts.length===index+1){
-            return (<div className={styles.box} onClick={()=>navigate(`/user?postId=${post.id}`)} key={post.id} ref={posts.length===index+1?lastBox:undefined}>
+            return (<div className={styles.box} onClick={()=>navigate(`/user?postId=${post.id}`)} key={post.id} ref={lastBox}>
             <div className={styles.picture}>
               <img src={post.imageUrl} alt=""></img>
             </div>
